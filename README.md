@@ -1,9 +1,9 @@
 <p align="center">
-  <a>English</a> | <a href="https://github.com/shuidi-l/snell-server/blob/main/README.zh_CN.md">中文</a>
+  <a>English</a> | <a href="https://github.com/waterdrops/snell-server/blob/main/README.zh_CN.md">中文</a>
 </p>
 
 # Snell Server Docker Image
- [![Build](https://github.com/shuidi-l/snell-server-docker/actions/workflows/build-push.yml/badge.svg)](https://github.com/shuidi-l/snell-server-docker/actions/workflows/build-push.yml) [![Release](https://img.shields.io/github/release/shuidi-l/snell-server-docker.svg?style=flat-square&logo=github&logoColor=fff&color=005AA4)](https://github.com/shuidi-l/snell-server-docker/releases) [![Image Size](https://img.shields.io/docker/image-size/1byte/snell-server?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![Docker Pulls](https://img.shields.io/docker/pulls/1byte/snell-server.svg?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server) [![Docker Stars](https://img.shields.io/docker/stars/1byte/snell-server.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fshuidi-l%2Fsnell-server.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Fshuidi-l%2Fsnell-server?ref=badge_small) [![Repository License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/license/mit)
+ [![Build](https://github.com/waterdrops/snell-server-docker/actions/workflows/build-push.yml/badge.svg)](https://github.com/waterdrops/snell-server-docker/actions/workflows/build-push.yml) [![Release](https://img.shields.io/github/release/waterdrops/snell-server-docker.svg?style=flat-square&logo=github&logoColor=fff&color=005AA4)](https://github.com/waterdrops/snell-server-docker/releases) [![Image Size](https://img.shields.io/docker/image-size/1byte/snell-server?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![Docker Pulls](https://img.shields.io/docker/pulls/1byte/snell-server.svg?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server) [![Docker Stars](https://img.shields.io/docker/stars/1byte/snell-server.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server?ref=badge_small) [![Repository License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/license/mit)
 
 A lightweight, multi-architecture (`linux/amd64` and `linux/arm64`) Docker image for Snell Server.  
 Supports configuration via environment variables, with secure defaults when not provided: random PSK and random port (>1024).
@@ -13,7 +13,7 @@ Supports configuration via environment variables, with secure defaults when not 
 This project provides Docker images from two sources:
 
 - **Docker Hub**: `1byte/snell-server`
-- **GitHub Container Registry (GHCR)**: `ghcr.io/shuidi-l/snell-server`
+- **GitHub Container Registry (GHCR)**: `ghcr.io/waterdrops/snell-server`
 
 Both images are identical and you can use either one based on your preference.
 
@@ -54,7 +54,7 @@ The server uses conditional configuration writing:
 docker pull 1byte/snell-server
 
 # GitHub Container Registry
-docker pull ghcr.io/shuidi-l/snell-server
+docker pull ghcr.io/waterdrops/snell-server
 ```
 
 ## Build the Image
@@ -62,8 +62,8 @@ docker pull ghcr.io/shuidi-l/snell-server
 ### Local build:
 
 ```bash
-# Build with default Snell version (5.0.0)
-git clone https://github.com/shuidi-l/snell-server-docker.git
+# Build with default Snell version (5.0.1)
+git clone https://github.com/waterdrops/snell-server-docker.git
 cd snell-server-docker
 docker build -t 1byte/snell-server .
 
@@ -74,7 +74,7 @@ docker build --build-arg SNELL_VERSION=4.1.1 -t 1byte/snell-server:4.1.1 .
 ### Multi-arch build (requires buildx):
 
 ```bash
-# Build with default Snell version (5.0.0)
+# Build with default Snell version (5.0.1)
 cd snell-server-docker # Please make sure to clone it first before proceeding
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
@@ -96,7 +96,7 @@ docker buildx build \
 docker run --rm 1byte/snell-server
 
 # Using GitHub Container Registry
-docker run --rm ghcr.io/shuidi-l/snell-server
+docker run --rm ghcr.io/waterdrops/snell-server
 ```
 
 ### Specify port and PSK
@@ -112,7 +112,7 @@ docker run -it -p 8234:8234 \
 docker run -it -p 8234:8234 \
   -e PORT=8234 \
   -e PSK=mysecurepsk \
-  ghcr.io/shuidi-l/snell-server
+  ghcr.io/waterdrops/snell-server
 ```
 
 ### Complete configuration example
@@ -138,7 +138,7 @@ docker run -itd -p 8234:8234 \
   -e OBFS=http \
   -e OBFS_HOST=gateway.icloud.com \
   -e TFO=false \
-  ghcr.io/shuidi-l/snell-server
+  ghcr.io/waterdrops/snell-server
 ```
 
 ## Run with docker-compose
@@ -256,4 +256,5 @@ If any validation fails, the server will display an error message and exit with 
 
 [LICENSE](LICENSE)
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fshuidi-l%2Fsnell-server.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2Fshuidi-l%2Fsnell-server?ref=badge_large&issueType=license)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server?ref=badge_large&issueType=license)
+
