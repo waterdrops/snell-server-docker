@@ -3,7 +3,7 @@
 </p>
 
 # Snell Server Docker 镜像
- [![Build](https://github.com/shuidi-l/snell-server-docker/actions/workflows/build-push.yml/badge.svg)](https://github.com/shuidi-l/snell-server-docker/actions/workflows/build-push.yml) [![Release](https://img.shields.io/github/release/shuidi-l/snell-server-docker.svg?style=flat-square&logo=github&logoColor=fff&color=005AA4)](https://github.com/shuidi-l/snell-server-docker/releases) [![Image Size](https://img.shields.io/docker/image-size/1byte/snell-server?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![Docker Pulls](https://img.shields.io/docker/pulls/1byte/snell-server.svg?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server) [![Docker Stars](https://img.shields.io/docker/stars/1byte/snell-server.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fshuidi-l%2Fsnell-server.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Fshuidi-l%2Fsnell-server?ref=badge_small) [![Repository License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/license/mit)
+ [![Build](https://github.com/waterdrops/snell-server-docker/actions/workflows/build-push.yml/badge.svg)](https://github.com/waterdrops/snell-server-docker/actions/workflows/build-push.yml) [![Release](https://img.shields.io/github/release/waterdrops/snell-server-docker.svg?style=flat-square&logo=github&logoColor=fff&color=005AA4)](https://github.com/waterdrops/snell-server-docker/releases) [![Image Size](https://img.shields.io/docker/image-size/1byte/snell-server?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![Docker Pulls](https://img.shields.io/docker/pulls/1byte/snell-server.svg?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server) [![Docker Stars](https://img.shields.io/docker/stars/1byte/snell-server.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server?ref=badge_small) [![Repository License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/license/mit)
 
 一个轻量级的、支持多架构（`linux/amd64` 和 `linux/arm64`）的 Snell Server Docker 镜像。
 
@@ -17,7 +17,7 @@
 本项目提供两个来源的 Docker 镜像：
 
 - **Docker Hub**: `1byte/snell-server`
-- **GitHub Container Registry (GHCR)**: `ghcr.io/shuidi-l/snell-server`
+- **GitHub Container Registry (GHCR)**: `ghcr.io/waterdrops/snell-server`
 
 两个镜像完全相同，您可以根据偏好选择使用其中一个。
 
@@ -72,7 +72,7 @@
 docker pull 1byte/snell-server
 
 # GitHub Container Registry
-docker pull ghcr.io/shuidi-l/snell-server
+docker pull ghcr.io/waterdrops/snell-server
 ```
 
 ## 构建镜像
@@ -80,8 +80,8 @@ docker pull ghcr.io/shuidi-l/snell-server
 ### 本地构建：
 
 ```bash
-# 使用默认 Snell 版本构建（5.0.0）
-git clone https://github.com/shuidi-l/snell-server-docker.git
+# 使用默认 Snell 版本构建（5.0.1）
+git clone https://github.com/waterdrops/snell-server-docker.git
 cd snell-server-docker
 docker build -t 1byte/snell-server .
 
@@ -92,7 +92,7 @@ docker build --build-arg SNELL_VERSION=4.1.1 -t 1byte/snell-server:4.1.1 .
 ### 多架构构建（需要 buildx）：
 
 ```bash
-# 使用默认 Snell 版本构建（5.0.0）
+# 使用默认 Snell 版本构建（5.0.1）
 cd snell-server-docker # 请确保先克隆仓库
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
@@ -114,7 +114,7 @@ docker buildx build \
 docker run --rm 1byte/snell-server
 
 # 使用 GitHub Container Registry
-docker run --rm ghcr.io/shuidi-l/snell-server
+docker run --rm ghcr.io/waterdrops/snell-server
 ```
 
 ### 指定端口和 PSK
@@ -130,7 +130,7 @@ docker run -itd -p 8234:8234 \
 docker run -itd -p 8234:8234 \
   -e PORT=8234 \
   -e PSK=mysecurepsk \
-  ghcr.io/shuidi-l/snell-server
+  ghcr.io/waterdrops/snell-server
 ```
 
 ### 完整配置示例
@@ -156,7 +156,7 @@ docker run -itd -p 8234:8234 \
   -e OBFS=http \
   -e OBFS_HOST=gateway.icloud.com \
   -e TFO=false \
-  ghcr.io/shuidi-l/snell-server
+  ghcr.io/waterdrops/snell-server
 ```
 
 ## 使用 docker-compose 运行
@@ -273,4 +273,4 @@ OR,((DOMAIN,plex.YOUR_DOMAIN), (DOMAIN,vw.YOUR_DOMAIN), (DOMAIN,gitea.YOUR_DOMAI
 
 [LICENSE](LICENSE)
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fshuidi-l%2Fsnell-server.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2Fshuidi-l%2Fsnell-server?ref=badge_large&issueType=license)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server?ref=badge_large&issueType=license)
