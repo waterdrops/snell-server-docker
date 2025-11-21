@@ -227,11 +227,11 @@ docker compose up -d
 
 - 向 ISP 申请公网 IP 地址
 - 端口映射
-- 可选：域名和 DNS 提供商（如 Cloudflare、阿里云）。如果你的 IP 是动态的，建议使用 ddns-go 进行自动 DNS 更新。这是一个简单易用的 DDNS 工具。详见 [^3]。
+- 可选：域名和 DNS 提供商（如 Cloudflare、阿里云）。如果你的 IP 是动态的，建议使用 ddns-go 进行自动 DNS 更新。这是一个简单易用的 DDNS 工具。详见 [3]。
 
 把下面内容添加到Surge配置文件中，并将`YOUR_FQDN`、`YOUR_PUBLIC_IP`、`YOUR_DOMAIN`、`${PORT}`、`${PSK}`、`MyHome` 和 `IP-CIDR,192.168.188.0/24` 替换为你的实际值。
 
-要了解更多关于 `Surge 策略组` 的信息，请参阅 Surge 策略组文档[^1] 和 Surge 手册[^2]。有关 Snell 的更多信息，请参考 Snell 知识库[^4]。
+要了解更多关于 `Surge 策略组` 的信息，请参阅 Surge 策略组文档[1] 和 Surge 手册[2]。有关 Snell 的更多信息，请参考 Snell 知识库[4]。
 
 ```vim
 [Proxy]
@@ -243,7 +243,7 @@ home = snell, YOUR_FQDN or YOUR_PUBLIC_IP, ${PORT}, psk=${PSK}, version=5, reuse
 # 定义一个名为 `🏠Home` 的 `subnet` 类型策略组。
 # 如果当前 Wi-Fi SSID 是 `MyHome`，则直连；
 # 否则切换到 `🏠Home` 策略组。
-# 更多详情请参考 [^1]。
+# 更多详情请参考 [1]。
 🏠Home = subnet, default = home, SSID:MyHome = DIRECT
 ...
 [Rule]
@@ -264,10 +264,10 @@ OR,((DOMAIN,plex.YOUR_DOMAIN), (DOMAIN,vw.YOUR_DOMAIN), (DOMAIN,gitea.YOUR_DOMAI
 如果任何验证失败，服务器将显示错误消息并以代码 1 退出。
 
 
-[^1]: https://manual.nssurge.com/policy-group/subnet.html
-[^2]: https://manual.nssurge.com/book/understanding-surge/cn/
-[^3]: https://github.com/jeessy2/ddns-go
-[^4]: https://kb.nssurge.com/surge-knowledge-base/release-notes/snell
+[1]: https://manual.nssurge.com/policy-group/subnet.html
+[2]: https://manual.nssurge.com/book/understanding-surge/cn/
+[3]: https://github.com/jeessy2/ddns-go
+[4]: https://kb.nssurge.com/surge-knowledge-base/release-notes/snell
 
 ## 许可证
 

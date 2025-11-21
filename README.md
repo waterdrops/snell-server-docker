@@ -209,11 +209,11 @@ docker compose up -d
 
 - Apply for a  public IP address from your ISP
 - Port mapping
-- Optional: A domain and a DNS provider(e.g, Cloudflare, AliCloud).  If you are going to use a DNS provider and your IP is dynamic, I recommend ddns-go for automatic DNS updates. It's a simple and easy-to-use DDNS tool. See [^3] for more details.
+- Optional: A domain and a DNS provider(e.g, Cloudflare, AliCloud).  If you are going to use a DNS provider and your IP is dynamic, I recommend ddns-go for automatic DNS updates. It's a simple and easy-to-use DDNS tool. See [3] for more details.
 
 Add the following to your Surge configuration file (e.g, Surge.conf), and replace placeholders like `YOUR_FQDN`, `YOUR_PUBLIC_IP`,  `YOUR_DOMAIN`, `${PORT}`,  `${PSK}`,  `MyHome` and `IP-CIDR,192.168.188.0/24` with your actual values.
 
-To learn more about `Surge Policy Groups`, see Surge Policy Group documentation[^1] and Surge Manual[^2]. For more information on Snell, refer to Snell knowledge[^4].
+To learn more about `Surge Policy Groups`, see Surge Policy Group documentation[1] and Surge Manual[2]. For more information on Snell, refer to Snell knowledge[4].
 
 ```vim
 [Proxy]
@@ -225,7 +225,7 @@ home = snell, YOUR_FQDN or YOUR_PUBLIC_IP, ${PORT}, psk=${PSK}, version=5, reuse
 # Define a policy group named `🏠Home` of type `subnet`.  
 # Behavior: If the current Wi-Fi SSID is `MyHome`, connect directly;  
 # otherwise, switch to the `🏠Home` policy group.
-# Please refer to [^1] for more details.
+# Please refer to [1] for more details.
 🏠Home = subnet, default = home, SSID:MyHome = DIRECT
 ...
 [Rule]
@@ -247,13 +247,14 @@ The server validates all input values before starting:
 If any validation fails, the server will display an error message and exit with code 1.
 
 
-[^1]: https://manual.nssurge.com/policy-group/subnet.html
-[^2]: https://manual.nssurge.com/book/understanding-surge/cn/
-[^3]: https://github.com/jeessy2/ddns-go
-[^4]: https://kb.nssurge.com/surge-knowledge-base/release-notes/snell
+[1]: https://manual.nssurge.com/policy-group/subnet.html
+[2]: https://manual.nssurge.com/book/understanding-surge/cn/
+[3]: https://github.com/jeessy2/ddns-go
+[4]: https://kb.nssurge.com/surge-knowledge-base/release-notes/snell
 
 ## License
 
 [LICENSE](LICENSE)
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server?ref=badge_large&issueType=license)
+
