@@ -1,5 +1,5 @@
 # ---------- Build Stage ----------
-FROM alpine:3.22 AS builder
+FROM alpine:3.23 AS builder
 
 # Set build-time arguments
 ARG BUILD_DIR="build"
