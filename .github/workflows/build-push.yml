@@ -96,6 +96,9 @@ jobs:
           ignore-unfixed: true
           exit-code: '1'
           format: table 
+        env:
+          TRIVY_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          TRIVY_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # Update Docker Hub README from repo README.md
       - name: Update Docker Hub README
