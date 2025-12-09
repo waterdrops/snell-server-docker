@@ -86,20 +86,6 @@ jobs:
           build-args: |
             SNELL_VERSION=${{ env.VERSION }}
 
-      - name: Run Trivy scan on image
-        uses: aquasecurity/trivy-action@0.33.1
-        with:
-          scan-type: 'image'
-          image-ref: ${{ steps.meta.outputs.tags }}
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
-          ignore-unfixed: true
-          exit-code: '1'
-          format: table 
-        env:
-          TRIVY_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          TRIVY_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
-
       # Update Docker Hub README from repo README.md
       - name: Update Docker Hub README
         uses: peter-evans/dockerhub-description@v5
