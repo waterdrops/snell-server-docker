@@ -5,7 +5,7 @@
 # Snell Server Docker Image
  [![Build](https://github.com/waterdrops/snell-server-docker/actions/workflows/build-push.yml/badge.svg)](https://github.com/waterdrops/snell-server-docker/actions/workflows/build-push.yml) [![Release](https://img.shields.io/github/release/waterdrops/snell-server-docker.svg?style=flat-square&logo=github&logoColor=fff&color=005AA4)](https://github.com/waterdrops/snell-server-docker/releases) [![Image Size](https://img.shields.io/docker/image-size/1byte/snell-server?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![Docker Pulls](https://img.shields.io/docker/pulls/1byte/snell-server.svg?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server) [![Docker Stars](https://img.shields.io/docker/stars/1byte/snell-server.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server-docker.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server-docker?ref=badge_small) [![Repository License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/license/mit)
 
-A lightweight, multi-architecture (`linux/amd64` and `linux/arm64`) Docker image for Snell Server.  
+A lightweight, multi-architecture (`linux/i386`, `linux/amd64`, `linux/arm64` and `linux/armv7l`) Docker image for Snell Server.  
 Supports configuration via environment variables, with secure defaults when not provided: random PSK and random port (>1024).
 
 ## Available Images
@@ -20,10 +20,10 @@ Both images are identical and you can use either one based on your preference.
 ## Features
 
 - **Multi-stage build** for a smaller image size
-- **Multi-architecture support**: `linux/amd64`, `linux/arm64`
+- **Multi-architecture support**: `linux/i386`, `linux/amd64`, `linux/arm64` and `linux/armv7l`
 - **Configurable via environment variables**
 - **Secure defaults**: random port and random 32-character PSK
-- **Minimal dependencies**: based on [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc) for glibc compatibility
+- **Minimal dependencies**: based on [debian:stable-slim](https://github.com/debuerreotype/docker-debian-artifacts/blob/c5f3180659db80fb676e09bd8bfd992e3df68cac/stable/slim/oci/index.json) and [busybox:stable](https://github.com/docker-library/busybox/blob/8d0487eb4336a9281dba965f5b1d656a79222142/latest-1/glibc/amd64/index.json)
 - **Conditional configuration**: only writes optional fields when values are provided
 - **Input validation**: validates IPv6 and OBFS values before startup
 
