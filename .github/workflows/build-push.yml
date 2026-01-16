@@ -5,6 +5,7 @@ on:
     branches:
       - "release/*"
       - "main"
+      - "feat/*"
     tags: [ "v*" ]
   workflow_dispatch:
 
