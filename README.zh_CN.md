@@ -5,7 +5,7 @@
 # Snell Server Docker 镜像
  [![Build](https://github.com/waterdrops/snell-server-docker/actions/workflows/build-push.yml/badge.svg)](https://github.com/waterdrops/snell-server-docker/actions/workflows/build-push.yml) [![Release](https://img.shields.io/github/release/waterdrops/snell-server-docker.svg?style=flat-square&logo=github&logoColor=fff&color=005AA4)](https://github.com/waterdrops/snell-server-docker/releases) [![Image Size](https://img.shields.io/docker/image-size/1byte/snell-server?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![Docker Pulls](https://img.shields.io/docker/pulls/1byte/snell-server.svg?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server) [![Docker Stars](https://img.shields.io/docker/stars/1byte/snell-server.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server-docker.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server-docker?ref=badge_small) [![Repository License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/license/mit)
 
-一个轻量级的、支持多架构（`linux/amd64` 和 `linux/arm64`）的 Snell Server Docker 镜像。
+一个轻量级的、支持多架构（`linux/i386`, `linux/amd64`, `linux/arm64` 和 `linux/armv7l`）的 Snell Server Docker 镜像。
 
 ## 为什么需要它
 
@@ -24,10 +24,10 @@
 ## 特性
 
 - **多阶段构建** 以获得更小的镜像大小
-- **多架构支持**：`linux/amd64`、`linux/arm64`
+- **多架构支持**：`linux/i386`, `linux/amd64`, `linux/arm64` 和 `linux/armv7l`
 - **可通过环境变量配置**
 - **安全默认值**：随机端口和随机 32 字符 PSK
-- **最小依赖**：基于 [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc)，提供 glibc 兼容性
+- **最小依赖**：基于[debian:stable-slim](https://github.com/debuerreotype/docker-debian-artifacts/blob/c5f3180659db80fb676e09bd8bfd992e3df68cac/stable/slim/oci/index.json) and [busybox:stable](https://github.com/docker-library/busybox/blob/8d0487eb4336a9281dba965f5b1d656a79222142/latest-1/glibc/amd64/index.json) 
 - **条件配置**：仅在提供值时写入可选字段
 - **输入验证**：在启动前验证 IPv6 和 OBFS 值
 
@@ -58,7 +58,7 @@
 
 ## 配置行为
 
-服务器使用条件配置写入：
+服务器使用条件配置写入
 
 - **IPv6**：仅在设置 `IPv6` 环境变量时写入配置
 - **OBFS**：仅在设置 `OBFS` 环境变量时写入配置
