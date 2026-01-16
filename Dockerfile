@@ -15,10 +15,9 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         wget \
-        unzip \
-        libstdc++6; \
+        unzip; \
     rm -rf /var/lib/apt/lists/*; \
-    # Chose the Arch type
+    # Chose the Arch type \
     case "${TARGETARCH}" in \
       amd64) SNELL_ARCH="linux-amd64" ;; \
       arm64) SNELL_ARCH="linux-aarch64" ;; \
@@ -38,7 +37,7 @@ RUN set -eux; \
     wget "${URL}" -O snell.zip  && \
     unzip -q snell.zip && \
     chmod +x snell-server && \
-    # Collect required runtime libs
+    # Collect required runtime libs \
     set -eux; \
     mkdir -p /runtime/lib; \
     cp -v /lib/*/libdl.so.2 /runtime/lib/; \
