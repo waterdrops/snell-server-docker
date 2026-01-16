@@ -10,7 +10,7 @@ updates:
     target-branch: "main"
     open-pull-requests-limit: 5
     reviewers:
-      - "shuidi-l"
+      - "waterdrops"
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -21,7 +21,7 @@ updates:
     target-branch: "main"
     open-pull-requests-limit: 3
     reviewers:
-      - "shuidi-l"
+      - "waterdrops"
 
   - package-ecosystem: "docker-compose"
     directory: "/"
@@ -32,4 +32,4 @@ updates:
     target-branch: "main"
     open-pull-requests-limit: 5
     reviewers:
-      - "shuidi-l"
+      - "waterdrops"

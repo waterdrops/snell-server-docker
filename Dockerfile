@@ -48,6 +48,7 @@ RUN set -eux; \
 FROM busybox:stable
 
 ARG BUILD_DIR="build"
+ARG APP_USER="appuser"
 
 ENV PORT= \
     PSK= \
@@ -63,5 +64,9 @@ COPY --from=builder /runtime/lib /lib
 COPY --from=builder /${BUILD_DIR}/snell-server .
 COPY ./snell.sh .
 
+RUN adduser -D -H -s /bin/false ${APP_USER} && \
+    chown -R ${APP_USER} /app
+
+USER ${APP_USER}
 
 CMD ["/bin/sh", "/app/snell.sh"]
