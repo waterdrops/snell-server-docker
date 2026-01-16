@@ -4,6 +4,7 @@ FROM debian:stable-slim AS builder
 # Set build-time arguments
 ARG BUILD_DIR="build"
 ARG TARGETARCH
+ARG TARGETVARIANT
 ARG TARGETOS
 ARG SNELL_VERSION=5.0.0
 
@@ -14,23 +15,29 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         wget \
-        unzip \
-        libstdc++6; \
-    rm -rf /var/lib/apt/lists/* && \
-    # Chose the Arch type
+        unzip; \
+    rm -rf /var/lib/apt/lists/*; \
+    # Chose the Arch type \
     case "${TARGETARCH}" in \
       amd64) SNELL_ARCH="linux-amd64" ;; \
       arm64) SNELL_ARCH="linux-aarch64" ;; \
       386)   SNELL_ARCH="linux-i386" ;; \
-      arm)   SNELL_ARCH="linux-armv7l" ;; \
+      arm) \
+        if [ "${TARGETVARIANT}" = "v7" ]; then \
+          SNELL_ARCH="linux-armv7l"; \
+        else \
+          echo "Unsupported arm variant: ${TARGETVARIANT}"; \
+          exit 1; \
+        fi \
+        ;; \
       *) echo "Unsupported TARGETARCH: ${TARGETARCH} (amd64/arm64 only)"; exit 1 ;; \
     esac; \
-    URL="https://dl.nssurge.com/snell/snell-server-v${SNELL_VERSION}-${SNELL_ARCH}.zip" && \
+    URL="https://github.com/waterdrops/snell-server-docker/releases/download/v5.0.1/snell-server-v${SNELL_VERSION}-${SNELL_ARCH}.zip" && \
     echo "Downloading ${URL}" && \
     wget "${URL}" -O snell.zip  && \
     unzip -q snell.zip && \
     chmod +x snell-server && \
-    # Collect required runtime libs
+    # Collect required runtime libs \
     set -eux; \
     mkdir -p /runtime/lib; \
     cp -v /lib/*/libdl.so.2 /runtime/lib/; \
