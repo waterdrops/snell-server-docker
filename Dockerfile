@@ -6,7 +6,7 @@ ARG BUILD_DIR="build"
 ARG TARGETARCH
 ARG TARGETVARIANT
 ARG TARGETOS
-ARG SNELL_VERSION=5.0.0
+ARG SNELL_VERSION=4.0.1
 
 WORKDIR /${BUILD_DIR}
 
@@ -32,7 +32,7 @@ RUN set -eux; \
         ;; \
       *) echo "Unsupported TARGETARCH: ${TARGETARCH} (amd64/arm64 only)"; exit 1 ;; \
     esac; \
-    URL="https://github.com/waterdrops/snell-server-docker/releases/download/v4.1.1/snell-server-v${SNELL_VERSION}-${SNELL_ARCH}.zip" && \
+    URL="https://github.com/waterdrops/snell-server-docker/releases/download/v${SNELL_VERSION}/snell-server-v${SNELL_VERSION}-${SNELL_ARCH}.zip" && \
     echo "Downloading ${URL}" && \
     wget "${URL}" -O snell.zip  && \
     unzip -q snell.zip && \
