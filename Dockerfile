@@ -65,8 +65,9 @@ COPY --from=builder /${BUILD_DIR}/snell-server .
 COPY ./snell.sh .
 
 RUN adduser -D -H -s /bin/false ${APP_USER} && \
-    chown -R ${APP_USER} /app
+    chown -R ${APP_USER} /app && \
+    chmod +x /app/snell.sh
 
 USER ${APP_USER}
 
-CMD ["/bin/sh", "/app/snell.sh"]
+CMD ["/app/snell.sh"]

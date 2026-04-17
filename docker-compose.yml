@@ -1,6 +1,7 @@
 services:
   snell-server:
     container_name: snell-server
+    stop_grace_period: 2s
     restart: always
     image: 1byte/snell-server:latest
     ports:

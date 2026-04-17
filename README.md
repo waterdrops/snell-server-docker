@@ -93,10 +93,10 @@ docker buildx build \
 
 ```bash
 # Using Docker Hub
-docker run --rm 1byte/snell-server
+docker run --stop-timeout 2 --rm 1byte/snell-server
 
 # Using GitHub Container Registry
-docker run --rm ghcr.io/waterdrops/snell-server
+docker run --stop-timeout 2 --rm ghcr.io/waterdrops/snell-server
 ```
 
 ### Specify port and PSK
@@ -104,12 +104,14 @@ docker run --rm ghcr.io/waterdrops/snell-server
 ```bash
 # Using Docker Hub
 docker run -it -p 8234:8234 \
+  --stop-timeout 2 \
   -e PORT=8234 \
   -e PSK=mysecurepsk \
   1byte/snell-server
 
 # Using GitHub Container Registry
 docker run -it -p 8234:8234 \
+  --stop-timeout 2 \
   -e PORT=8234 \
   -e PSK=mysecurepsk \
   ghcr.io/waterdrops/snell-server
@@ -122,6 +124,7 @@ Please refer to the `Environment Variables` section and adjust them as needed.  
 ```bash
 # Using Docker Hub
 docker run -itd -p 8234:8234 \
+  --stop-timeout 2 \
   -e PORT=8234 \
   -e PSK=mysecurepsk \
   -e IPv6=true \
@@ -132,6 +135,7 @@ docker run -itd -p 8234:8234 \
 
 # Using GitHub Container Registry
 docker run -itd -p 8234:8234 \
+  --stop-timeout 2 \
   -e PORT=8234 \
   -e PSK=mysecurepsk \
   -e IPv6=true \
@@ -167,6 +171,7 @@ PSK=mysecurepsk
 services:
   snell-server:
     container_name: snell-server
+    stop_grace_period: 2s
     restart: always
     image: 1byte/snell-server:latest
     ports:
