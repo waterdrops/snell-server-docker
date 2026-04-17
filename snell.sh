@@ -71,13 +71,12 @@ _read_port_from_listen() {
   echo "$line" | sed -n -r 's/.*:([0-9]{1,5})[[:space:]]*$/\1/p' | head -n1
 }
 
-# --- defaults (may be overridden by config/env) ---
+# --- defaults (may be overridden by config/env / hydrate) ---
 _gen_psk() {
   # 避免 set -e 受上游 SIGPIPE 影响；ash 无 pipefail
   LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 32 || true
 }
-PORT="${PORT:-$(random_port)}"
-PSK="${PSK:-$(_gen_psk)}"
+
 IPv6="${IPv6:-}"          # true|false
 OBFS="${OBFS:-}"          # off|http
 OBFS_HOST="${OBFS_HOST:-}"
@@ -161,6 +160,9 @@ print_start_info() {
 
 main() {
   hydrate_from_existing_conf || true
+  PORT="${PORT:-$(random_port)}"
+  PSK="${PSK:-$(_gen_psk)}"
+
   ensure
   write_config_if_missing
   print_start_info
@@ -175,5 +177,5 @@ main() {
   exec "$BIN" -c "$CONF"
 }
 
-main
+main "$@"
 
