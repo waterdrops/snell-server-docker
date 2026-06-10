@@ -1,10 +1,5 @@
 version: 2
 
-multi-ecosystem-groups:
-  infrastructure:
-    schedule:
-      interval: "weekly"
-
 updates:
   - package-ecosystem: "docker"
     directory: "/"
@@ -21,7 +16,6 @@ updates:
     labels:
       - "dependencies"
       - "docker"
-    multi-ecosystem-group: "infrastructure"
     groups:
       debian-base:
         patterns: ["debian"]
@@ -45,7 +39,6 @@ updates:
     labels:
       - "dependencies"
       - "github-actions"
-    multi-ecosystem-group: "infrastructure"
     groups:
       docker-actions:
         patterns: ["docker/*"]
