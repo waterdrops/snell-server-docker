@@ -2,18 +2,17 @@ version: 2
 
 multi-ecosystem-groups:
   infrastructure:
-    update-types: ["minor", "patch"]
+    schedule:
+      interval: "weekly"
 
 updates:
   - package-ecosystem: "docker"
     directory: "/"
+    patterns: ["debian", "busybox"]
     schedule:
       interval: "weekly"
     cooldown:
-      default-days: 1
-      semver-major-days: 14
-      semver-minor-days: 7
-      semver-patch-days: 3
+      default-days: 3
     commit-message:
       prefix: "build"
       include: "scope"
@@ -33,13 +32,11 @@ updates:
 
   - package-ecosystem: "github-actions"
     directory: "/"
+    patterns: ["*"]
     schedule:
       interval: "weekly"
     cooldown:
-      default-days: 1
-      semver-major-days: 14
-      semver-minor-days: 7
-      semver-patch-days: 3
+      default-days: 3
     commit-message:
       prefix: "chore"
       include: "scope"
