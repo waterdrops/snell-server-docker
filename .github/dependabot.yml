@@ -1,35 +1,61 @@
 version: 2
 
+multi-ecosystem-groups:
+  infrastructure:
+    update-types: ["minor", "patch"]
+
 updates:
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 0
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
     commit-message:
-      prefix: "feat:"
+      prefix: "build"
+      include: "scope"
     target-branch: "main"
     open-pull-requests-limit: 5
-    reviewers:
-      - "waterdrops"
+    labels:
+      - "dependencies"
+      - "docker"
+    multi-ecosystem-group: "infrastructure"
+    groups:
+      debian-base:
+        patterns: ["debian"]
+        update-types: ["minor", "patch"]
+      busybox-base:
+        patterns: ["busybox"]
+        update-types: ["minor", "patch"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 0
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
     commit-message:
-      prefix: "chore:"
-    target-branch: "main"
-    open-pull-requests-limit: 3
-    reviewers:
-      - "waterdrops"
-
-  - package-ecosystem: "docker-compose"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    commit-message:
-      prefix: "feat:"
+      prefix: "chore"
+      include: "scope"
     target-branch: "main"
     open-pull-requests-limit: 5
-    reviewers:
-      - "waterdrops"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    multi-ecosystem-group: "infrastructure"
+    groups:
+      docker-actions:
+        patterns: ["docker/*"]
+        update-types: ["minor", "patch"]
+      security-scanning:
+        patterns: ["aquasecurity/*"]
+        update-types: ["minor", "patch"]
+      misc-actions:
+        patterns: ["actions/*", "peter-evans/*"]
+        update-types: ["minor", "patch"]
