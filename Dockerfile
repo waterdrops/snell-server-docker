@@ -4,9 +4,8 @@ FROM debian:stable-slim AS builder
 # Set build-time arguments
 ARG BUILD_DIR="build"
 ARG TARGETARCH
-ARG TARGETVARIANT
 ARG TARGETOS
-ARG SNELL_VERSION=5.0.1
+ARG SNELL_VERSION=6.0.0b1
 
 WORKDIR /${BUILD_DIR}
 
@@ -22,15 +21,7 @@ RUN set -eux; \
       amd64) SNELL_ARCH="linux-amd64" ;; \
       arm64) SNELL_ARCH="linux-aarch64" ;; \
       386)   SNELL_ARCH="linux-i386" ;; \
-      arm) \
-        if [ "${TARGETVARIANT}" = "v7" ]; then \
-          SNELL_ARCH="linux-armv7l"; \
-        else \
-          echo "Unsupported arm variant: ${TARGETVARIANT}"; \
-          exit 1; \
-        fi \
-        ;; \
-      *) echo "Unsupported TARGETARCH: ${TARGETARCH} (amd64/arm64 only)"; exit 1 ;; \
+      *) echo "Unsupported TARGETARCH: ${TARGETARCH} (386/amd64/arm64 only)"; exit 1 ;; \
     esac; \
     URL="https://github.com/waterdrops/snell-server-docker/releases/download/v${SNELL_VERSION}/snell-server-v${SNELL_VERSION}-${SNELL_ARCH}.zip" && \
     echo "Downloading ${URL}" && \
