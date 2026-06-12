@@ -10,12 +10,16 @@ ARG SNELL_VERSION=6.0.0b1
 WORKDIR /${BUILD_DIR}
 
 RUN set -eux; \
-    apt-get update; \
+    apt-get update && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         wget \
-        unzip; \
+        libc-ares2 \
+        libsodium23 \
+        libuv1-dev \
+        unzip && \
     rm -rf /var/lib/apt/lists/*; \
+    
     # Chose the Arch type \
     case "${TARGETARCH}" in \
       amd64) SNELL_ARCH="linux-amd64" ;; \
@@ -28,11 +32,21 @@ RUN set -eux; \
     wget "${URL}" -O snell.zip  && \
     unzip -q snell.zip && \
     chmod +x snell-server && \
+    # Download and install the libssl1.1.deb package
+    ARCH=$(dpkg --print-architecture) && \
+    wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u7_${ARCH}.deb && \
+    dpkg -i libssl1.1_1.1.1w-0+deb11u7_${ARCH}.deb && \
+    rm -f libssl1.1_1.1.1w-0+deb11u7_${ARCH}.deb && \
     # Collect required runtime libs \
     set -eux; \
     mkdir -p /runtime/lib; \
     cp -v /lib/*/libdl.so.2 /runtime/lib/; \
     cp -v /lib/*/libgcc_s.so.1 /runtime/lib/; \
+    cp -v /lib/*/libcares.so.2 /runtime/lib/; \
+    cp -v /lib/*/libsodium.so.23 /runtime/lib/; \
+    cp -v /lib/*/libssl.so.1.1 /runtime/lib/; \
+    cp -v /lib/*/libcrypto.so.1.1 /runtime/lib/; \
+    cp -v /lib/*/libuv.so.1 /runtime/lib/; \
     cp -v /usr/lib/*/libstdc++.so.6* /runtime/lib/ || true
 
 # ---------- Runtime Stage ----------
