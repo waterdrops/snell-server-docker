@@ -14,9 +14,6 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         wget \
-        libc-ares2 \
-        libsodium23 \
-        libuv1-dev \
         unzip && \
     rm -rf /var/lib/apt/lists/*; \
     
@@ -42,11 +39,6 @@ RUN set -eux; \
     mkdir -p /runtime/lib; \
     cp -v /lib/*/libdl.so.2 /runtime/lib/; \
     cp -v /lib/*/libgcc_s.so.1 /runtime/lib/; \
-    cp -v /lib/*/libcares.so.2 /runtime/lib/; \
-    cp -v /lib/*/libsodium.so.23 /runtime/lib/; \
-    cp -v /lib/*/libssl.so.1.1 /runtime/lib/; \
-    cp -v /lib/*/libcrypto.so.1.1 /runtime/lib/; \
-    cp -v /lib/*/libuv.so.1 /runtime/lib/; \
     cp -v /usr/lib/*/libstdc++.so.6* /runtime/lib/ || true
 
 # ---------- Runtime Stage ----------
