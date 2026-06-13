@@ -2,12 +2,12 @@
 #
 # Quick start:
 #   make pre-push          # build + test (run before git push)
-#   make build SNELL_VERSION=6.0.0b1
+#   make build SNELL_VERSION=6.0.0b2
 #   make run               # start container for manual testing
 
 IMAGE        ?= snell-server
 TAG          ?= local
-SNELL_VERSION ?= 6.0.0b1
+SNELL_VERSION ?= 6.0.0b2
 FULL_IMAGE   := $(IMAGE):$(TAG)
 PLATFORMS    ?= linux/386,linux/amd64,linux/arm64
 
