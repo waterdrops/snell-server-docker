@@ -53,12 +53,23 @@ The server uses conditional configuration writing:
 
 ## Docker Images
 
+Published tags (example for Snell `6.0.0b2`):
+
+| Tag | Description |
+| --- | --- |
+| `latest` | Latest build from `main` |
+| `6` | Latest image for Snell v6 |
+| `6.0.0b2` | Exact Snell version (no `v` prefix) |
+
 ```bash
 # Docker Hub
 docker pull 1byte/snell-server
+docker pull 1byte/snell-server:6
+docker pull 1byte/snell-server:6.0.0b2
 
 # GitHub Container Registry
 docker pull ghcr.io/waterdrops/snell-server
+docker pull ghcr.io/waterdrops/snell-server:6
 ```
 
 ## Build the Image

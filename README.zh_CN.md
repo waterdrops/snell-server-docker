@@ -71,12 +71,23 @@
 
 ## Docker 镜像
 
+发布标签（以 Snell `6.0.0b2` 为例）：
+
+| 标签 | 说明 |
+| --- | --- |
+| `latest` | `main` 分支最新构建 |
+| `6` | Snell v6 大版本最新镜像 |
+| `6.0.0b2` | 精确版本（无 `v` 前缀） |
+
 ```bash
 # Docker Hub
 docker pull 1byte/snell-server
+docker pull 1byte/snell-server:6
+docker pull 1byte/snell-server:6.0.0b2
 
 # GitHub Container Registry
 docker pull ghcr.io/waterdrops/snell-server
+docker pull ghcr.io/waterdrops/snell-server:6
 ```
 
 ## 构建镜像

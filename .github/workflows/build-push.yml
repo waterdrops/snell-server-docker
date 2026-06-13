@@ -68,8 +68,9 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/snell-server
             ${{ secrets.DOCKERHUB_USERNAME }}/snell-server
           tags: |
-            type=ref,event=branch
+            type=ref,event=branch,enable={{is_not_default_branch}}
             type=match,pattern=v(.*),group=1
+            type=match,pattern=v(\d+),group=1
             type=raw,value=latest,enable={{is_default_branch}}
           flavor: |
             latest=false
