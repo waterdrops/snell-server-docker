@@ -4,39 +4,36 @@ FROM debian:stable-slim AS builder
 # Set build-time arguments
 ARG BUILD_DIR="build"
 ARG TARGETARCH
-ARG TARGETVARIANT
 ARG TARGETOS
-ARG SNELL_VERSION=5.0.1
+ARG SNELL_VERSION=6.0.0b2
 
 WORKDIR /${BUILD_DIR}
 
 RUN set -eux; \
-    apt-get update; \
+    apt-get update && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         wget \
-        unzip; \
+        unzip && \
     rm -rf /var/lib/apt/lists/*; \
+    
     # Chose the Arch type \
     case "${TARGETARCH}" in \
       amd64) SNELL_ARCH="linux-amd64" ;; \
       arm64) SNELL_ARCH="linux-aarch64" ;; \
       386)   SNELL_ARCH="linux-i386" ;; \
-      arm) \
-        if [ "${TARGETVARIANT}" = "v7" ]; then \
-          SNELL_ARCH="linux-armv7l"; \
-        else \
-          echo "Unsupported arm variant: ${TARGETVARIANT}"; \
-          exit 1; \
-        fi \
-        ;; \
-      *) echo "Unsupported TARGETARCH: ${TARGETARCH} (amd64/arm64 only)"; exit 1 ;; \
+      *) echo "Unsupported TARGETARCH: ${TARGETARCH} (386/amd64/arm64 only)"; exit 1 ;; \
     esac; \
     URL="https://github.com/waterdrops/snell-server-docker/releases/download/v${SNELL_VERSION}/snell-server-v${SNELL_VERSION}-${SNELL_ARCH}.zip" && \
     echo "Downloading ${URL}" && \
     wget "${URL}" -O snell.zip  && \
     unzip -q snell.zip && \
     chmod +x snell-server && \
+    # Download and install the libssl1.1.deb package
+    ARCH=$(dpkg --print-architecture) && \
+    wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u7_${ARCH}.deb && \
+    dpkg -i libssl1.1_1.1.1w-0+deb11u7_${ARCH}.deb && \
+    rm -f libssl1.1_1.1.1w-0+deb11u7_${ARCH}.deb && \
     # Collect required runtime libs \
     set -eux; \
     mkdir -p /runtime/lib; \
@@ -52,6 +49,8 @@ ARG APP_USER="appuser"
 
 ENV PORT= \
     PSK= \
+    LISTEN= \
+    DNS_IP_PREFERENCE= \
     IPv6= \
     OBFS= \
     OBFS_HOST= \
