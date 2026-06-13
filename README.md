@@ -33,6 +33,8 @@ Both images are identical and you can use either one based on your preference.
 | ----------- | --------------------------- | -------------------- | ------------------------------------- |
 | `PORT`      | Random 1025–65535           | Listening port       | Must be integer 1025–65535            |
 | `PSK`       | Random 32-char alphanumeric | Pre-shared key       | Required                              |
+| `LISTEN`    | `0.0.0.0:PORT`              | Listen addresses     | When `IPv6=true`, set to `0.0.0.0:PORT,[::]:PORT`; override with a custom value when `IPv6` is not `true` |
+| `DNS_IP_PREFERENCE` | `default`           | DNS IP family preference | Must be `default`, `prefer-ipv4`, `prefer-ipv6`, `ipv4-only`, or `ipv6-only` |
 | `IPv6`      | Not set (optional)          | Enable IPv6          | Must be `true` or `false` if provided |
 | `OBFS`      | Not set (optional)          | Obfuscation mode     | Must be `off` or `http` if provided   |
 | `OBFS_HOST` | Not set (optional)          | Obfuscation host     | Only used when `OBFS=http`            |
@@ -42,7 +44,9 @@ Both images are identical and you can use either one based on your preference.
 
 The server uses conditional configuration writing:
 
-- **IPv6**: Only written to config if `IPv6` environment variable is set
+- **IPv6**: Only written to config if `IPv6` environment variable is set; when `IPv6=true`, `listen` is set to `0.0.0.0:PORT,[::]:PORT` for dual-stack binding
+- **LISTEN**: Written to config as `listen`; defaults to `0.0.0.0:PORT`, or dual-stack when `IPv6=true`
+- **DNS_IP_PREFERENCE**: Always written to config as `dns-ip-preference` (default: `default`)
 - **OBFS**: Only written to config if `OBFS` environment variable is set
 - **OBFS_HOST**: Only written to config if `OBFS=http` and `OBFS_HOST` is set
 - **Existing config file**: If `snell-server.conf` already exists (e.g., mounted via volume), it will be used as-is and the script will skip generating a new one
@@ -247,6 +251,7 @@ The server validates all input values before starting:
 
 - **Invalid PORT**: Must be an integer between 1025 and 65535
 - **Invalid IPv6**: Must be `true` or `false` if provided
+- **Invalid DNS_IP_PREFERENCE**: Must be `default`, `prefer-ipv4`, `prefer-ipv6`, `ipv4-only`, or `ipv6-only`
 - **Invalid OBFS**: Must be `off` or `http` if provided
 
 If any validation fails, the server will display an error message and exit with code 1.

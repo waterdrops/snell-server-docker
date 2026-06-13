@@ -44,6 +44,10 @@ test-script: build ## Run snell.sh in dry-run mode
 		-e DRY_RUN=1 \
 		-e PORT=8234 \
 		-e PSK=test12345678901234567890123456789012 \
+		-e TFO=true \
+		-e IPv6=true \
+		-e OBFS=http \
+		-e OBFS_HOST=gateway.icloud.com \
 		$(FULL_IMAGE)
 
 scan: ## Run Trivy filesystem scan (skipped if trivy is not installed)

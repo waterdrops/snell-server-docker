@@ -77,22 +77,36 @@ _gen_psk() {
   LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 32 || true
 }
 
-IPv6="${IPv6:-}"          # true|false
-OBFS="${OBFS:-}"          # off|http
+IPv6="${IPv6:-}"                    # true|false
+OBFS="${OBFS:-}"                    # off|http
 OBFS_HOST="${OBFS_HOST:-}"
-TFO="${TFO:-true}"        # true|false
+TFO="${TFO:-true}"                  # true|false
+LISTEN="${LISTEN:-}"
+DNS_IP_PREFERENCE="${DNS_IP_PREFERENCE:-default}"
 
 # Prefer existing config: populate variables from it if present
 hydrate_from_existing_conf() {
   [ -e "$CONF" ] || return 1
   _info "Using existing config: $CONF (skip generation)"
-  v="$(_read_port_from_listen || true)";  [ -n "${v:-}" ] && PORT="$v"
-  v="$(_read_kv psk        || true)";     [ -n "${v:-}" ] && PSK="$v"
-  v="$(_read_kv ipv6       || true)";     [ -n "${v:-}" ] && IPv6="$v"
-  v="$(_read_kv obfs       || true)";     [ -n "${v:-}" ] && OBFS="$v"
-  v="$(_read_kv obfs-host  || true)";     [ -n "${v:-}" ] && OBFS_HOST="$v"
-  v="$(_read_kv tfo        || true)";     [ -n "${v:-}" ] && TFO="$v"
+  v="$(_read_kv listen            || true)"; [ -n "${v:-}" ] && LISTEN="$v"
+  v="$(_read_port_from_listen     || true)"; [ -n "${v:-}" ] && PORT="$v"
+  v="$(_read_kv psk               || true)"; [ -n "${v:-}" ] && PSK="$v"
+  v="$(_read_kv ipv6              || true)"; [ -n "${v:-}" ] && IPv6="$v"
+  v="$(_read_kv obfs              || true)"; [ -n "${v:-}" ] && OBFS="$v"
+  v="$(_read_kv obfs-host         || true)"; [ -n "${v:-}" ] && OBFS_HOST="$v"
+  v="$(_read_kv tfo               || true)"; [ -n "${v:-}" ] && TFO="$v"
+  v="$(_read_kv dns-ip-preference || true)"; [ -n "${v:-}" ] && DNS_IP_PREFERENCE="$v"
   return 0
+}
+
+resolve_listen() {
+  if [ "${IPv6:-}" = "true" ]; then
+    echo "0.0.0.0:${PORT},[::]:${PORT}"
+  elif [ -n "${LISTEN:-}" ]; then
+    echo "$LISTEN"
+  else
+    echo "0.0.0.0:${PORT}"
+  fi
 }
 
 ensure() {
@@ -122,6 +136,10 @@ ensure() {
   if [ -n "${TFO:-}" ] && [ "$TFO" != "true" ] && [ "$TFO" != "false" ]; then
     _die "Invalid TFO: $TFO (must be 'true' or 'false')"
   fi
+  case "${DNS_IP_PREFERENCE:-default}" in
+    default|prefer-ipv4|prefer-ipv6|ipv4-only|ipv6-only) ;;
+    *) _die "Invalid DNS_IP_PREFERENCE: $DNS_IP_PREFERENCE (must be default, prefer-ipv4, prefer-ipv6, ipv4-only, or ipv6-only)";;
+  esac
 }
 
 write_config_if_missing() {
@@ -133,8 +151,9 @@ write_config_if_missing() {
   _debug2 "Writing new config to $CONF"
   {
     echo "[snell-server]"
-    echo "listen = 0.0.0.0:${PORT}"
+    echo "listen = ${LISTEN}"
     echo "psk = ${PSK}"
+    echo "dns-ip-preference = ${DNS_IP_PREFERENCE}"
     [ -n "${IPv6:-}" ] && echo "ipv6 = ${IPv6}"
     if [ -n "${OBFS:-}" ]; then
       echo "obfs = ${OBFS}"
@@ -149,7 +168,9 @@ write_config_if_missing() {
 print_start_info() {
   _info "Starting Snell"
   printf 'PORT: %s\n' "$PORT"
+  printf 'LISTEN: %s\n' "$LISTEN"
   printf 'PSK: %s\n' "$PSK"
+  printf 'DNS_IP_PREFERENCE: %s\n' "$DNS_IP_PREFERENCE"
   [ -n "${IPv6:-}" ] && printf 'IPv6: %s\n' "$IPv6"
   [ -n "${OBFS:-}" ] && printf 'OBFS: %s\n' "$OBFS"
   if [ "${OBFS:-}" = "http" ] && [ -n "${OBFS_HOST:-}" ]; then
@@ -162,6 +183,8 @@ main() {
   hydrate_from_existing_conf || true
   PORT="${PORT:-$(random_port)}"
   PSK="${PSK:-$(_gen_psk)}"
+  DNS_IP_PREFERENCE="${DNS_IP_PREFERENCE:-default}"
+  LISTEN="$(resolve_listen)"
 
   ensure
   write_config_if_missing

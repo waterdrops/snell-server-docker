@@ -49,6 +49,8 @@ ARG APP_USER="appuser"
 
 ENV PORT= \
     PSK= \
+    LISTEN= \
+    DNS_IP_PREFERENCE= \
     IPv6= \
     OBFS= \
     OBFS_HOST= \

@@ -9,6 +9,7 @@ services:
     environment:
       PORT: "${PORT}"
       PSK: "${PSK}"
+      # DNS_IP_PREFERENCE: "default"
       # IPv6: "false"
       # TFO: "true"
       # OBFS: "http"        # Set to "false" to disable; any other value enables it
