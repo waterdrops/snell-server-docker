@@ -25,7 +25,7 @@ Both images are identical and you can use either one based on your preference.
 - **Secure defaults**: random port and random 32-character PSK
 - **Minimal dependencies**: based on [debian:stable-slim](https://github.com/debuerreotype/docker-debian-artifacts/blob/c5f3180659db80fb676e09bd8bfd992e3df68cac/stable/slim/oci/index.json) and [busybox:stable](https://github.com/docker-library/busybox/blob/8d0487eb4336a9281dba965f5b1d656a79222142/latest-1/glibc/amd64/index.json)
 - **Conditional configuration**: only writes optional fields when values are provided
-- **Input validation**: validates IPv6 and OBFS values before startup
+- **Input validation**: validates `IPv6`, `MODE`, `DNS_IP_PREFERENCE`, and `OBFS` values before startup
 
 ## Environment Variables
 
@@ -36,9 +36,11 @@ Both images are identical and you can use either one based on your preference.
 | `LISTEN`    | `0.0.0.0:PORT`              | Listen addresses     | When `IPv6=true`, set to `0.0.0.0:PORT,[::]:PORT`; override with a custom value when `IPv6` is not `true` |
 | `DNS_IP_PREFERENCE` | `default`           | DNS IP family preference | Must be `default`, `prefer-ipv4`, `prefer-ipv6`, `ipv4-only`, or `ipv6-only` |
 | `IPv6`      | Not set (optional)          | Enable IPv6          | Must be `true` or `false` if provided |
-| `OBFS`      | Not set (optional)          | Obfuscation mode     | Must be `off` or `http` if provided   |
+| `MODE`      | Not set (optional)          | Snell v6 crypto/obfuscation mode (beta 3+) | Must be `default`, `unshaped`, or `unsafe-raw` if provided |
+| `OBFS`      | Not set (optional)          | Obfuscation mode (legacy) | Must be `off` or `http` if provided   |
 | `OBFS_HOST` | Not set (optional)          | Obfuscation host     | Only used when `OBFS=http`            |
 | `TFO`       | `true`                      | Enable TCP Fast Open | Boolean                               |
+
 
 ## Configuration Behavior
 
@@ -47,29 +49,31 @@ The server uses conditional configuration writing:
 - **IPv6**: Only written to config if `IPv6` environment variable is set; when `IPv6=true`, `listen` is set to `0.0.0.0:PORT,[::]:PORT` for dual-stack binding
 - **LISTEN**: Written to config as `listen`; defaults to `0.0.0.0:PORT`, or dual-stack when `IPv6=true`
 - **DNS_IP_PREFERENCE**: Always written to config as `dns-ip-preference` (default: `default`)
+- **MODE**: Only written to config if `MODE` environment variable is set
 - **OBFS**: Only written to config if `OBFS` environment variable is set
 - **OBFS_HOST**: Only written to config if `OBFS=http` and `OBFS_HOST` is set
 - **Existing config file**: If `snell-server.conf` already exists (e.g., mounted via volume), it will be used as-is and the script will skip generating a new one
 
 ## Docker Images
 
-Published tags (example for Snell `6.0.0b2`):
+Published tags (example for Snell `6.0.0b3`):
 
 | Tag | Description |
 | --- | --- |
 | `latest` | Latest build from `main` |
 | `6` | Latest image for Snell v6 |
-| `6.0.0b2` | Exact Snell version (no `v` prefix) |
+| `6.0.0b3` | Exact Snell version (no `v` prefix) |
 
 ```bash
 # Docker Hub
 docker pull 1byte/snell-server
 docker pull 1byte/snell-server:6
-docker pull 1byte/snell-server:6.0.0b2
+docker pull 1byte/snell-server:6.0.0b3
 
 # GitHub Container Registry
 docker pull ghcr.io/waterdrops/snell-server
 docker pull ghcr.io/waterdrops/snell-server:6
+docker pull ghcr.io/waterdrops/snell-server:6.0.0b3
 ```
 
 ## Build the Image
@@ -134,7 +138,7 @@ docker run -it -p 8234:8234 \
 
 ### Complete configuration example
 
-Please refer to the `Environment Variables` section and adjust them as needed.  For example, you can disable obfuscation by setting: `OBFS=off`
+Please refer to the `Environment Variables` section and adjust them as needed. For example, set `MODE=unshaped` for higher throughput (client must use the same mode).
 
 ```bash
 # Using Docker Hub
@@ -142,9 +146,9 @@ docker run -itd -p 8234:8234 \
   --stop-timeout 2 \
   -e PORT=8234 \
   -e PSK=mysecurepsk \
+  -e MODE=default \
+  -e DNS_IP_PREFERENCE=default \
   -e IPv6=true \
-  -e OBFS=http \
-  -e OBFS_HOST=gateway.icloud.com \
   -e TFO=false \
   1byte/snell-server
 
@@ -153,9 +157,9 @@ docker run -itd -p 8234:8234 \
   --stop-timeout 2 \
   -e PORT=8234 \
   -e PSK=mysecurepsk \
+  -e MODE=default \
+  -e DNS_IP_PREFERENCE=default \
   -e IPv6=true \
-  -e OBFS=http \
-  -e OBFS_HOST=gateway.icloud.com \
   -e TFO=false \
   ghcr.io/waterdrops/snell-server
 ```
@@ -176,6 +180,8 @@ PORT=8234
 PSK=mysecurepsk
 # IPv6=false
 # TFO=true
+# dns-ip-preference = default # default | prefer-ipv4 | prefer-ipv6 | ipv4-only | ipv6-only
+# MODE=default          # default | unshaped | unsafe-raw
 # OBFS=http
 # OBFS_HOST=gateway.icloud.com
 ```
@@ -196,6 +202,8 @@ services:
       PSK: "${PSK}"
       # IPv6: "${IPv6}"
       # TFO: "${TFO}"
+      # dns-ip-preference = default # default | prefer-ipv4 | prefer-ipv6 | ipv4-only | ipv6-only
+      # MODE: "${MODE}"      # default | unshaped | unsafe-raw
       # OBFS: "${OBFS}"        # Set to "false" to disable; `http` enables it
       # OBFS_HOST: "${OBFS_HOST}"
     # volumes:
@@ -237,9 +245,9 @@ To learn more about `Surge Policy Groups`, see Surge Policy Group documentation[
 
 ```vim
 [Proxy]
-home = snell, YOUR_FQDN or YOUR_PUBLIC_IP, ${PORT}, psk=${PSK}, version=5, reuse=true
-# If obfuscation is enabled:
-# home = snell, YOUR_PUBLIC_IP or YOUR_FQDN, YOUR_PORT, psk=YOUR_PSK, version=5, obfs=http, obfs-host=YOUR_OBFS_HOST, reuse=true, tfo=true
+home = snell, YOUR_FQDN or YOUR_PUBLIC_IP, ${PORT}, psk=${PSK}, version=6, reuse=true
+# mode=unshaped for higher throughput (must match server MODE):
+# home = snell, YOUR_PUBLIC_IP or YOUR_FQDN, YOUR_PORT, psk=YOUR_PSK, version=6, mode=unshaped, reuse=true, tfo=true
 ...
 [Proxy Group]
 # Define a policy group named `🏠Home` of type `subnet`.  
@@ -263,6 +271,7 @@ The server validates all input values before starting:
 - **Invalid PORT**: Must be an integer between 1025 and 65535
 - **Invalid IPv6**: Must be `true` or `false` if provided
 - **Invalid DNS_IP_PREFERENCE**: Must be `default`, `prefer-ipv4`, `prefer-ipv6`, `ipv4-only`, or `ipv6-only`
+- **Invalid MODE**: Must be `default`, `unshaped`, or `unsafe-raw` if provided
 - **Invalid OBFS**: Must be `off` or `http` if provided
 
 If any validation fails, the server will display an error message and exit with code 1.

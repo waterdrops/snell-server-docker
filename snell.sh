@@ -78,11 +78,12 @@ _gen_psk() {
 }
 
 IPv6="${IPv6:-}"                    # true|false
+MODE="${MODE:-}"                    # default|unshaped|unsafe-raw
 OBFS="${OBFS:-}"                    # off|http
 OBFS_HOST="${OBFS_HOST:-}"
 TFO="${TFO:-true}"                  # true|false
 LISTEN="${LISTEN:-}"
-DNS_IP_PREFERENCE="${DNS_IP_PREFERENCE:-default}"
+DNS_IP_PREFERENCE="${DNS_IP_PREFERENCE:-}"
 
 # Prefer existing config: populate variables from it if present
 hydrate_from_existing_conf() {
@@ -92,6 +93,7 @@ hydrate_from_existing_conf() {
   v="$(_read_port_from_listen     || true)"; [ -n "${v:-}" ] && PORT="$v"
   v="$(_read_kv psk               || true)"; [ -n "${v:-}" ] && PSK="$v"
   v="$(_read_kv ipv6              || true)"; [ -n "${v:-}" ] && IPv6="$v"
+  v="$(_read_kv mode              || true)"; [ -n "${v:-}" ] && MODE="$v"
   v="$(_read_kv obfs              || true)"; [ -n "${v:-}" ] && OBFS="$v"
   v="$(_read_kv obfs-host         || true)"; [ -n "${v:-}" ] && OBFS_HOST="$v"
   v="$(_read_kv tfo               || true)"; [ -n "${v:-}" ] && TFO="$v"
@@ -127,6 +129,9 @@ ensure() {
   if [ -n "${IPv6:-}" ] && [ "$IPv6" != "true" ] && [ "$IPv6" != "false" ]; then
     _die "Invalid IPv6: $IPv6 (must be 'true' or 'false')"
   fi
+  if [ -n "${MODE:-}" ] && [ "$MODE" != "default" ] && [ "$MODE" != "unshaped" ] && [ "$MODE" != "unsafe-raw" ]; then
+    _die "Invalid MODE: $MODE (must be 'default', 'unshaped', or 'unsafe-raw')"
+  fi
   if [ -n "${OBFS:-}" ] && [ "$OBFS" != "off" ] && [ "$OBFS" != "http" ]; then
     _die "Invalid OBFS: $OBFS (must be 'off' or 'http')"
   fi
@@ -153,8 +158,9 @@ write_config_if_missing() {
     echo "[snell-server]"
     echo "listen = ${LISTEN}"
     echo "psk = ${PSK}"
-    echo "dns-ip-preference = ${DNS_IP_PREFERENCE}"
+    echo "dns-ip-preference = ${DNS_IP_PREFERENCE:-default}"
     [ -n "${IPv6:-}" ] && echo "ipv6 = ${IPv6}"
+    echo "mode = ${MODE:-default}"
     if [ -n "${OBFS:-}" ]; then
       echo "obfs = ${OBFS}"
       if [ "${OBFS}" = "http" ] && [ -n "${OBFS_HOST:-}" ]; then
@@ -170,8 +176,9 @@ print_start_info() {
   printf 'PORT: %s\n' "$PORT"
   printf 'LISTEN: %s\n' "$LISTEN"
   printf 'PSK: %s\n' "$PSK"
-  printf 'DNS_IP_PREFERENCE: %s\n' "$DNS_IP_PREFERENCE"
   [ -n "${IPv6:-}" ] && printf 'IPv6: %s\n' "$IPv6"
+  [ -n "${DNS_IP_PREFERENCE:-}" ] && printf 'DNS_IP_PREFERENCE: %s\n' "$DNS_IP_PREFERENCE"
+  [ -n "${MODE:-}" ] && printf 'MODE: %s\n' "$MODE"
   [ -n "${OBFS:-}" ] && printf 'OBFS: %s\n' "$OBFS"
   if [ "${OBFS:-}" = "http" ] && [ -n "${OBFS_HOST:-}" ]; then
     printf 'OBFS_HOST: %s\n' "$OBFS_HOST"
@@ -183,7 +190,6 @@ main() {
   hydrate_from_existing_conf || true
   PORT="${PORT:-$(random_port)}"
   PSK="${PSK:-$(_gen_psk)}"
-  DNS_IP_PREFERENCE="${DNS_IP_PREFERENCE:-default}"
   LISTEN="$(resolve_listen)"
 
   ensure

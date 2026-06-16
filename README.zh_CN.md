@@ -29,7 +29,7 @@
 - **安全默认值**：随机端口和随机 32 字符 PSK
 - **最小依赖**：基于[debian:stable-slim](https://github.com/debuerreotype/docker-debian-artifacts/blob/c5f3180659db80fb676e09bd8bfd992e3df68cac/stable/slim/oci/index.json) and [busybox:stable](https://github.com/docker-library/busybox/blob/8d0487eb4336a9281dba965f5b1d656a79222142/latest-1/glibc/amd64/index.json) 
 - **条件配置**：仅在提供值时写入可选字段
-- **输入验证**：在启动前验证 IPv6 和 OBFS 值
+- **输入验证**：在启动前验证 IPv6、MODE、DNS_IP_PREFERENCE 和 OBFS 值
 
 ## 贡献
 
@@ -54,9 +54,11 @@
 | `LISTEN`    | `0.0.0.0:PORT`             | 监听地址      | `IPv6=true` 时为 `0.0.0.0:PORT,[::]:PORT`；未启用 IPv6 时可自定义 |
 | `DNS_IP_PREFERENCE` | `default`          | DNS 解析 IP 地址族偏好 | 必须是 `default`、`prefer-ipv4`、`prefer-ipv6`、`ipv4-only` 或 `ipv6-only` |
 | `IPv6`      | 未设置（可选）              | 启用 IPv6     | 如果提供，必须是 `true` 或 `false` |
-| `OBFS`      | 未设置（可选）              | 混淆模式      | 如果提供，必须是 `off` 或 `http` |
+| `MODE`      | 未设置（可选）              | Snell v6 加密/混淆模式（beta 3+） | 如果提供，必须是 `default`、`unshaped` 或 `unsafe-raw` |
+| `OBFS`      | 未设置（可选）              | 混淆模式（旧版） | 如果提供，必须是 `off` 或 `http` |
 | `OBFS_HOST` | 未设置（可选）              | 混淆主机      | 仅在 `OBFS=http` 时使用       |
 | `TFO`       | `true`                      | 启用 TCP Fast Open | 布尔值                    |
+
 
 ## 配置行为
 
@@ -65,29 +67,31 @@
 - **IPv6**：仅在设置 `IPv6` 环境变量时写入配置；当 `IPv6=true` 时，`listen` 设为 `0.0.0.0:PORT,[::]:PORT` 以实现双栈监听
 - **LISTEN**：写入配置为 `listen`；默认为 `0.0.0.0:PORT`，`IPv6=true` 时为双栈地址
 - **DNS_IP_PREFERENCE**：始终写入配置为 `dns-ip-preference`（默认：`default`）
+- **MODE**：仅在设置 `MODE` 环境变量时写入配置
 - **OBFS**：仅在设置 `OBFS` 环境变量时写入配置
 - **OBFS_HOST**：仅在 `OBFS=http` 且设置 `OBFS_HOST` 时写入配置
 - **已有配置文件**：如果已经存在 `snell-server.conf`（例如通过 volume 挂载），脚本将直接使用该文件并跳过生成
 
 ## Docker 镜像
 
-发布标签（以 Snell `6.0.0b2` 为例）：
+发布标签（以 Snell `6.0.0b3` 为例）：
 
 | 标签 | 说明 |
 | --- | --- |
 | `latest` | `main` 分支最新构建 |
 | `6` | Snell v6 大版本最新镜像 |
-| `6.0.0b2` | 精确版本（无 `v` 前缀） |
+| `6.0.0b3` | 精确版本（无 `v` 前缀） |
 
 ```bash
 # Docker Hub
 docker pull 1byte/snell-server
 docker pull 1byte/snell-server:6
-docker pull 1byte/snell-server:6.0.0b2
+docker pull 1byte/snell-server:6.0.0b3
 
 # GitHub Container Registry
 docker pull ghcr.io/waterdrops/snell-server
 docker pull ghcr.io/waterdrops/snell-server:6
+docker pull ghcr.io/waterdrops/snell-server:6.0.0b3
 ```
 
 ## 构建镜像
@@ -152,7 +156,7 @@ docker run -itd -p 8234:8234 \
 
 ### 完整配置示例
 
-请参考 `环境变量` 部分并根据需要调整。例如，可以通过设置 `OBFS=off` 来禁用混淆。
+请参考 `环境变量` 部分并根据需要调整。例如，可设置 `MODE=unshaped` 以提升吞吐（客户端须使用相同 mode）。
 
 ```bash
 # 使用 Docker Hub
@@ -160,9 +164,9 @@ docker run -itd -p 8234:8234 \
   --stop-timeout 2 \
   -e PORT=8234 \
   -e PSK=mysecurepsk \
+  -e MODE=default \
+  -e DNS_IP_PREFERENCE=default \
   -e IPv6=true \
-  -e OBFS=http \
-  -e OBFS_HOST=gateway.icloud.com \
   -e TFO=false \
   1byte/snell-server
 
@@ -171,9 +175,9 @@ docker run -itd -p 8234:8234 \
   --stop-timeout 2 \
   -e PORT=8234 \
   -e PSK=mysecurepsk \
+  -e MODE=default \
+  -e DNS_IP_PREFERENCE=default \
   -e IPv6=true \
-  -e OBFS=http \
-  -e OBFS_HOST=gateway.icloud.com \
   -e TFO=false \
   ghcr.io/waterdrops/snell-server
 ```
@@ -194,6 +198,8 @@ PORT=8234
 PSK=mysecurepsk
 # IPv6=false
 # TFO=true
+# dns-ip-preference = default # default | prefer-ipv4 | prefer-ipv6 | ipv4-only | ipv6-only
+# MODE=default          # default | unshaped | unsafe-raw
 # OBFS=http
 # OBFS_HOST=gateway.icloud.com
 ```
@@ -214,6 +220,8 @@ services:
       PSK: "${PSK}"
       # IPv6: "${IPv6}"
       # TFO: "${TFO}"
+      # dns-ip-preference = default # default | prefer-ipv4 | prefer-ipv6 | ipv4-only | ipv6-only
+      # MODE: "${MODE}"      # default | unshaped | unsafe-raw
       # OBFS: "${OBFS}"        # 设置为 "false" 禁用；`http` 启用
       # OBFS_HOST: "${OBFS_HOST}"
     # volumes:
@@ -255,9 +263,9 @@ docker compose up -d
 
 ```vim
 [Proxy]
-home = snell, YOUR_FQDN or YOUR_PUBLIC_IP, ${PORT}, psk=${PSK}, version=5, reuse=true
-# 如果启用了混淆 
-# home = snell, YOUR_PUBLIC_IP or YOUR_FQDN, YOUR_PORT, psk=YOUR_PSK, version=5, obfs=http, obfs-host=YOUR_OBFS_HOST, reuse=true, tfo=true
+home = snell, YOUR_FQDN or YOUR_PUBLIC_IP, ${PORT}, psk=${PSK}, version=6, reuse=true
+# mode=unshaped 可提升吞吐（须与服务端 MODE 一致）：
+# home = snell, YOUR_PUBLIC_IP or YOUR_FQDN, YOUR_PORT, psk=YOUR_PSK, version=6, mode=unshaped, reuse=true, tfo=true
 ...
 [Proxy Group]
 # 定义一个名为 `🏠Home` 的 `subnet` 类型策略组。
@@ -280,6 +288,7 @@ OR,((DOMAIN,plex.YOUR_DOMAIN), (DOMAIN,vw.YOUR_DOMAIN), (DOMAIN,gitea.YOUR_DOMAI
 - **无效的 PORT**：必须是 1025 到 65535 之间的整数
 - **无效的 IPv6**：如果提供，必须是 `true` 或 `false`
 - **无效的 DNS_IP_PREFERENCE**：必须是 `default`、`prefer-ipv4`、`prefer-ipv6`、`ipv4-only` 或 `ipv6-only`
+- **无效的 MODE**：如果提供，必须是 `default`、`unshaped` 或 `unsafe-raw`
 - **无效的 OBFS**：如果提供，必须是 `off` 或 `http`
 
 如果任何验证失败，服务器将显示错误消息并以代码 1 退出。
