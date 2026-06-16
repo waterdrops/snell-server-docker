@@ -12,6 +12,7 @@ services:
       # DNS_IP_PREFERENCE: "default"
       # IPv6: "false"
       # TFO: "true"
+      # MODE: "default"     # default | unshaped | unsafe-raw
       # OBFS: "http"        # Set to "false" to disable; any other value enables it
       # OBFS_HOST: "gateway.icloud.com"
     # volumes:
