@@ -78,7 +78,7 @@ _gen_psk() {
 }
 
 IPv6="${IPv6:-}"                    # true|false
-MODE="${MODE:-}"                    # default|unshaped|unsafe-raw
+MODE="${MODE:-}"             # default|unshaped|unsafe-raw
 OBFS="${OBFS:-}"                    # off|http
 OBFS_HOST="${OBFS_HOST:-}"
 TFO="${TFO:-true}"                  # true|false
@@ -129,9 +129,10 @@ ensure() {
   if [ -n "${IPv6:-}" ] && [ "$IPv6" != "true" ] && [ "$IPv6" != "false" ]; then
     _die "Invalid IPv6: $IPv6 (must be 'true' or 'false')"
   fi
-  if [ -n "${MODE:-}" ] && [ "$MODE" != "default" ] && [ "$MODE" != "unshaped" ] && [ "$MODE" != "unsafe-raw" ]; then
-    _die "Invalid MODE: $MODE (must be 'default', 'unshaped', or 'unsafe-raw')"
-  fi
+  case "${MODE:-default}" in
+    default|unshaped|unsafe-raw) ;;
+    *) _die "Invalid MODE: $MODE (must be 'default', 'unshaped', or 'unsafe-raw')";;
+  esac
   if [ -n "${OBFS:-}" ] && [ "$OBFS" != "off" ] && [ "$OBFS" != "http" ]; then
     _die "Invalid OBFS: $OBFS (must be 'off' or 'http')"
   fi

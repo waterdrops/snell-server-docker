@@ -29,7 +29,7 @@
 - **安全默认值**：随机端口和随机 32 字符 PSK
 - **最小依赖**：基于[debian:stable-slim](https://github.com/debuerreotype/docker-debian-artifacts/blob/c5f3180659db80fb676e09bd8bfd992e3df68cac/stable/slim/oci/index.json) and [busybox:stable](https://github.com/docker-library/busybox/blob/8d0487eb4336a9281dba965f5b1d656a79222142/latest-1/glibc/amd64/index.json) 
 - **条件配置**：仅在提供值时写入可选字段
-- **输入验证**：在启动前验证 IPv6、MODE、DNS_IP_PREFERENCE 和 OBFS 值
+- **输入验证**：在启动前验证 `IPv6`、`MODE`、`DNS_IP_PREFERENCE` 和 `OBFS` 值
 
 ## 贡献
 
@@ -54,7 +54,7 @@
 | `LISTEN`    | `0.0.0.0:PORT`             | 监听地址      | `IPv6=true` 时为 `0.0.0.0:PORT,[::]:PORT`；未启用 IPv6 时可自定义 |
 | `DNS_IP_PREFERENCE` | `default`          | DNS 解析 IP 地址族偏好 | 必须是 `default`、`prefer-ipv4`、`prefer-ipv6`、`ipv4-only` 或 `ipv6-only` |
 | `IPv6`      | 未设置（可选）              | 启用 IPv6     | 如果提供，必须是 `true` 或 `false` |
-| `MODE`      | 未设置（可选）              | Snell v6 加密/混淆模式（beta 3+） | 如果提供，必须是 `default`、`unshaped` 或 `unsafe-raw` |
+| `MODE`      | `default`              | Snell v6 加密/混淆模式（beta 3+） | 必须是 `default`、`unshaped` 或 `unsafe-raw` |
 | `OBFS`      | 未设置（可选）              | 混淆模式（旧版） | 如果提供，必须是 `off` 或 `http` |
 | `OBFS_HOST` | 未设置（可选）              | 混淆主机      | 仅在 `OBFS=http` 时使用       |
 | `TFO`       | `true`                      | 启用 TCP Fast Open | 布尔值                    |
@@ -67,7 +67,7 @@
 - **IPv6**：仅在设置 `IPv6` 环境变量时写入配置；当 `IPv6=true` 时，`listen` 设为 `0.0.0.0:PORT,[::]:PORT` 以实现双栈监听
 - **LISTEN**：写入配置为 `listen`；默认为 `0.0.0.0:PORT`，`IPv6=true` 时为双栈地址
 - **DNS_IP_PREFERENCE**：始终写入配置为 `dns-ip-preference`（默认：`default`）
-- **MODE**：仅在设置 `MODE` 环境变量时写入配置
+- **MODE**：始终写入配置为 `mode`（默认：`default`）
 - **OBFS**：仅在设置 `OBFS` 环境变量时写入配置
 - **OBFS_HOST**：仅在 `OBFS=http` 且设置 `OBFS_HOST` 时写入配置
 - **已有配置文件**：如果已经存在 `snell-server.conf`（例如通过 volume 挂载），脚本将直接使用该文件并跳过生成
@@ -288,7 +288,7 @@ OR,((DOMAIN,plex.YOUR_DOMAIN), (DOMAIN,vw.YOUR_DOMAIN), (DOMAIN,gitea.YOUR_DOMAI
 - **无效的 PORT**：必须是 1025 到 65535 之间的整数
 - **无效的 IPv6**：如果提供，必须是 `true` 或 `false`
 - **无效的 DNS_IP_PREFERENCE**：必须是 `default`、`prefer-ipv4`、`prefer-ipv6`、`ipv4-only` 或 `ipv6-only`
-- **无效的 MODE**：如果提供，必须是 `default`、`unshaped` 或 `unsafe-raw`
+- **无效的 MODE**：必须是 `default`、`unshaped` 或 `unsafe-raw`
 - **无效的 OBFS**：如果提供，必须是 `off` 或 `http`
 
 如果任何验证失败，服务器将显示错误消息并以代码 1 退出。

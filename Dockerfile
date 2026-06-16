@@ -16,7 +16,6 @@ RUN set -eux; \
         wget \
         unzip && \
     rm -rf /var/lib/apt/lists/*; \
-    
     # Chose the Arch type \
     case "${TARGETARCH}" in \
       amd64) SNELL_ARCH="linux-amd64" ;; \
@@ -30,11 +29,6 @@ RUN set -eux; \
     wget "${URL}" -O snell.zip  && \
     unzip -q snell.zip && \
     chmod +x snell-server && \
-    # Download and install the libssl1.1.deb package
-    ARCH=$(dpkg --print-architecture) && \
-    wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u7_${ARCH}.deb && \
-    dpkg -i libssl1.1_1.1.1w-0+deb11u7_${ARCH}.deb && \
-    rm -f libssl1.1_1.1.1w-0+deb11u7_${ARCH}.deb && \
     # Collect required runtime libs \
     set -eux; \
     mkdir -p /runtime/lib; \

@@ -3,7 +3,7 @@
 </p>
 
 # Snell Server Docker Image
- [![Build](https://github.com/waterdrops/snell-server-docker/actions/workflows/build-push.yml/badge.svg)](https://github.com/waterdrops/snell-server-docker/actions/workflows/build-push.yml) [![Release](https://img.shields.io/github/release/waterdrops/snell-server-docker.svg?style=flat-square&logo=github&logoColor=fff&color=005AA4)](https://github.com/waterdrops/snell-server-docker/releases) [![Image Size](https://img.shields.io/docker/image-size/1byte/snell-server?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![Docker Pulls](https://img.shields.io/docker/pulls/1byte/snell-server.svg?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server) [![Docker Stars](https://img.shields.io/docker/stars/1byte/snell-server.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server-docker.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server-docker?ref=badge_small) [![Repository License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/license/mit)
+[![Build](https://github.com/waterdrops/snell-server-docker/actions/workflows/build-push.yml/badge.svg)](https://github.com/waterdrops/snell-server-docker/actions/workflows/build-push.yml) [![Release](https://img.shields.io/github/release/waterdrops/snell-server-docker.svg?style=flat-square&logo=github&logoColor=fff&color=005AA4)](https://github.com/waterdrops/snell-server-docker/releases) [![Image Size](https://img.shields.io/docker/image-size/1byte/snell-server?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![Docker Pulls](https://img.shields.io/docker/pulls/1byte/snell-server.svg?style=&logo=docker)](https://hub.docker.com/r/1byte/snell-server) [![Docker Stars](https://img.shields.io/docker/stars/1byte/snell-server.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/1byte/snell-server/) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server-docker.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server-docker?ref=badge_small) [![Repository License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/license/mit)
 
 A lightweight, multi-architecture (`linux/i386`, `linux/amd64`, `linux/arm64` and `linux/armv7l`) Docker image for Snell Server.  
 Supports configuration via environment variables, with secure defaults when not provided: random PSK and random port (>1024).
@@ -25,21 +25,22 @@ Both images are identical and you can use either one based on your preference.
 - **Secure defaults**: random port and random 32-character PSK
 - **Minimal dependencies**: based on [debian:stable-slim](https://github.com/debuerreotype/docker-debian-artifacts/blob/c5f3180659db80fb676e09bd8bfd992e3df68cac/stable/slim/oci/index.json) and [busybox:stable](https://github.com/docker-library/busybox/blob/8d0487eb4336a9281dba965f5b1d656a79222142/latest-1/glibc/amd64/index.json)
 - **Conditional configuration**: only writes optional fields when values are provided
-- **Input validation**: validates `IPv6`, `MODE`, `DNS_IP_PREFERENCE`, and `OBFS` values before startup
+- **Input validation**: validates `IPv6`, `MODE`, `DNS_IP_PREFERENCE` and `OBFS` values before startup
 
 ## Environment Variables
 
-| Variable    | Default Value               | Description          | Validation Rules                      |
-| ----------- | --------------------------- | -------------------- | ------------------------------------- |
-| `PORT`      | Random 1025–65535           | Listening port       | Must be integer 1025–65535            |
-| `PSK`       | Random 32-char alphanumeric | Pre-shared key       | Required                              |
-| `LISTEN`    | `0.0.0.0:PORT`              | Listen addresses     | When `IPv6=true`, set to `0.0.0.0:PORT,[::]:PORT`; override with a custom value when `IPv6` is not `true` |
-| `DNS_IP_PREFERENCE` | `default`           | DNS IP family preference | Must be `default`, `prefer-ipv4`, `prefer-ipv6`, `ipv4-only`, or `ipv6-only` |
-| `IPv6`      | Not set (optional)          | Enable IPv6          | Must be `true` or `false` if provided |
-| `MODE`      | Not set (optional)          | Snell v6 crypto/obfuscation mode (beta 3+) | Must be `default`, `unshaped`, or `unsafe-raw` if provided |
-| `OBFS`      | Not set (optional)          | Obfuscation mode (legacy) | Must be `off` or `http` if provided   |
-| `OBFS_HOST` | Not set (optional)          | Obfuscation host     | Only used when `OBFS=http`            |
-| `TFO`       | `true`                      | Enable TCP Fast Open | Boolean                               |
+
+| Variable            | Default Value               | Description                                | Validation Rules                                                                                          |
+| ------------------- | --------------------------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| `PORT`              | Random 1025–65535           | Listening port                             | Must be integer 1025–65535                                                                                |
+| `PSK`               | Random 32-char alphanumeric | Pre-shared key                             | Required                                                                                                  |
+| `LISTEN`            | `0.0.0.0:PORT`              | Listen addresses                           | When `IPv6=true`, set to `0.0.0.0:PORT,[::]:PORT`; override with a custom value when `IPv6` is not `true` |
+| `DNS_IP_PREFERENCE` | `default`                   | DNS IP family preference                   | Must be `default`, `prefer-ipv4`, `prefer-ipv6`, `ipv4-only`, or `ipv6-only`                              |
+| `IPv6`              | Not set (optional)          | Enable IPv6                                | Must be `true` or `false` if provided                                                                     |
+| `MODE`              | `default`                   | Snell v6 crypto/obfuscation mode (beta 3+) | Must be `default`, `unshaped`, or `unsafe-raw`                                                            |
+| `OBFS`              | Not set (optional)          | Obfuscation mode (legacy)                  | Must be `off` or `http` if provided                                                                       |
+| `OBFS_HOST`         | Not set (optional)          | Obfuscation host                           | Only used when `OBFS=http`                                                                                |
+| `TFO`               | `true`                      | Enable TCP Fast Open                       | Boolean                                                                                                   |
 
 
 ## Configuration Behavior
@@ -49,7 +50,7 @@ The server uses conditional configuration writing:
 - **IPv6**: Only written to config if `IPv6` environment variable is set; when `IPv6=true`, `listen` is set to `0.0.0.0:PORT,[::]:PORT` for dual-stack binding
 - **LISTEN**: Written to config as `listen`; defaults to `0.0.0.0:PORT`, or dual-stack when `IPv6=true`
 - **DNS_IP_PREFERENCE**: Always written to config as `dns-ip-preference` (default: `default`)
-- **MODE**: Only written to config if `MODE` environment variable is set
+- **MODE**: Always written to config as `mode` (default: `default`)
 - **OBFS**: Only written to config if `OBFS` environment variable is set
 - **OBFS_HOST**: Only written to config if `OBFS=http` and `OBFS_HOST` is set
 - **Existing config file**: If `snell-server.conf` already exists (e.g., mounted via volume), it will be used as-is and the script will skip generating a new one
@@ -58,11 +59,13 @@ The server uses conditional configuration writing:
 
 Published tags (example for Snell `6.0.0b3`):
 
-| Tag | Description |
-| --- | --- |
-| `latest` | Latest build from `main` |
-| `6` | Latest image for Snell v6 |
+
+| Tag       | Description                         |
+| --------- | ----------------------------------- |
+| `latest`  | Latest build from `main`            |
+| `6`       | Latest image for Snell v6           |
 | `6.0.0b3` | Exact Snell version (no `v` prefix) |
+
 
 ```bash
 # Docker Hub
@@ -210,7 +213,6 @@ services:
     #   - ./snell-server.conf:/app/snell-server.conf
 ```
 
-
 ##### Use a custom snell-server.conf
 
 If you already have a `snell-server.conf`, mount it and the script will skip auto-generation:
@@ -237,11 +239,11 @@ docker compose up -d
 
 - Apply for a  public IP address from your ISP
 - Port mapping
-- Optional: A domain and a DNS provider(e.g, Cloudflare, AliCloud).  If you are going to use a DNS provider and your IP is dynamic, I recommend ddns-go for automatic DNS updates. It's a simple and easy-to-use DDNS tool. See [3] for more details.
+- Optional: A domain and a DNS provider(e.g, Cloudflare, AliCloud).  If you are going to use a DNS provider and your IP is dynamic, I recommend ddns-go for automatic DNS updates. It's a simple and easy-to-use DDNS tool. See [3](https://github.com/jeessy2/ddns-go) for more details.
 
 Add the following to your Surge configuration file (e.g, Surge.conf), and replace placeholders like `YOUR_FQDN`, `YOUR_PUBLIC_IP`,  `YOUR_DOMAIN`, `${PORT}`,  `${PSK}`,  `MyHome` and `IP-CIDR,192.168.188.0/24` with your actual values.
 
-To learn more about `Surge Policy Groups`, see Surge Policy Group documentation[1] and Surge Manual[2]. For more information on Snell, refer to Snell knowledge[4].
+To learn more about `Surge Policy Groups`, see Surge Policy Group documentation[1](https://manual.nssurge.com/policy-group/subnet.html) and Surge Manual[2](https://manual.nssurge.com/book/understanding-surge/cn/). For more information on Snell, refer to Snell knowledge[4](https://kb.nssurge.com/surge-knowledge-base/release-notes/snell).
 
 ```vim
 [Proxy]
@@ -263,7 +265,6 @@ OR,((DOMAIN,plex.YOUR_DOMAIN), (DOMAIN,vw.YOUR_DOMAIN), (DOMAIN,gitea.YOUR_DOMAI
 ...
 ```
 
-
 ## Error Handling
 
 The server validates all input values before starting:
@@ -271,20 +272,13 @@ The server validates all input values before starting:
 - **Invalid PORT**: Must be an integer between 1025 and 65535
 - **Invalid IPv6**: Must be `true` or `false` if provided
 - **Invalid DNS_IP_PREFERENCE**: Must be `default`, `prefer-ipv4`, `prefer-ipv6`, `ipv4-only`, or `ipv6-only`
-- **Invalid MODE**: Must be `default`, `unshaped`, or `unsafe-raw` if provided
+- **Invalid MODE**: Must be `default`, `unshaped`, or `unsafe-raw`
 - **Invalid OBFS**: Must be `off` or `http` if provided
 
 If any validation fails, the server will display an error message and exit with code 1.
-
-
-[1]: https://manual.nssurge.com/policy-group/subnet.html
-[2]: https://manual.nssurge.com/book/understanding-surge/cn/
-[3]: https://github.com/jeessy2/ddns-go
-[4]: https://kb.nssurge.com/surge-knowledge-base/release-notes/snell
 
 ## License
 
 [LICENSE](LICENSE)
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server-docker.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server-docker?ref=badge_large&issueType=license)
-
+[FOSSA Status](https://app.fossa.com/projects/git%2Bgithub.com%2Fwaterdrops%2Fsnell-server-docker?ref=badge_large&issueType=license)
