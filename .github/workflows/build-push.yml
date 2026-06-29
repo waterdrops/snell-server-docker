@@ -17,7 +17,7 @@ permissions:
   packages: write
 
 env:
-  VERSION: 6.0.0b3
+  VERSION: 6.0.0b4
 
 jobs:
   build-and-push:
@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.0
       
       - name: Run Trivy scan on source code
         uses: aquasecurity/trivy-action@v0.36.0
