@@ -5,7 +5,7 @@ FROM debian:stable-slim AS builder
 ARG BUILD_DIR="build"
 ARG TARGETARCH
 ARG TARGETOS
-ARG SNELL_VERSION=6.0.0b3
+ARG SNELL_VERSION=6.0.0b4
 
 WORKDIR /${BUILD_DIR}
 
@@ -16,7 +16,6 @@ RUN set -eux; \
         wget \
         unzip && \
     rm -rf /var/lib/apt/lists/*; \
-    
     # Chose the Arch type \
     case "${TARGETARCH}" in \
       amd64) SNELL_ARCH="linux-amd64" ;; \
@@ -25,7 +24,7 @@ RUN set -eux; \
       *) echo "Unsupported TARGETARCH: ${TARGETARCH} (386/amd64/arm64 only)"; exit 1 ;; \
     esac; \
     URL="https://github.com/waterdrops/snell-server-docker/releases/download/v${SNELL_VERSION}/snell-server-v${SNELL_VERSION}-${SNELL_ARCH}.zip" && \
-    # URL="https://dl.nssurge.com/snell/snell-server-v${SNELL_VERSION}-${SNELL_ARCH}.zip" && \
+    #URL="https://dl.nssurge.com/snell/snell-server-v${SNELL_VERSION}-${SNELL_ARCH}.zip" && \
     echo "Downloading ${URL}" && \
     wget "${URL}" -O snell.zip  && \
     unzip -q snell.zip && \
