@@ -7,7 +7,7 @@
 
 IMAGE        ?= snell-server
 TAG          ?= local
-SNELL_VERSION ?= 6.0.0b4
+SNELL_VERSION ?= 6.0.0rc
 FULL_IMAGE   := $(IMAGE):$(TAG)
 PLATFORMS    ?= linux/386,linux/amd64,linux/arm64
 
