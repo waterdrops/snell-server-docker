@@ -17,7 +17,7 @@ permissions:
   packages: write
 
 env:
-  VERSION: 6.0.0rc
+  VERSION: 6.0.0rc2
 
 jobs:
   build-and-push:
